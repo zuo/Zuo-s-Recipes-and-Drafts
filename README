@@ -22,10 +22,10 @@ Repo content:
        reduced class hierarchy.
 
 * trace_logging.py
-  -- just import, call and log your selected call/return/exception events
-     with standard Python logging framework;
-  -- quite flexible tool and just about 50 efective SLOC (excluding the
-     example script);
+  -- just import, call and log your selected call/return/exception
+     events with standard Python logging framework;
+  -- quite flexible tool and just about 50 efective SLOC (excluding
+     the example script);
   -- it's rather for debugging than production environments (programs
      noticeably slow down).
 
