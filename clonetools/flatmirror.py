@@ -6,11 +6,8 @@
 from sys import version_info
 try:
     from abc import ABCMeta
-    next = next
 except ImportError:
     class ABCMeta(type): "A mockup"
-    def next(i):
-        return i.next()
 try:
     from functools import partial
 except ImportError:
@@ -20,13 +17,17 @@ except ImportError:
 __all__ = ('flatmirror',)
 
 
-# Some built-in types:
+# Some builtins:
 
 if version_info[0] >= 3:
     basestring = str
 _dictproxy_type = type(object.__dict__)
 if _dictproxy_type is dict:
     class _dictproxy_type(object): pass
+try: next = next
+except NameError:
+    def next(i):
+        return i.next()
 
 
 # Public function:

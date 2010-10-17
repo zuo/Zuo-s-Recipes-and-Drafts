@@ -39,7 +39,7 @@ __all__ = ('clonecls', 'clonefunc', 'clone', 'flatmirror',
            'ContainsAll', 'IdentContainer')
 
 
-# Constants and built-in types:
+# Constants and builtins:
 
 if version_info[0] >= 3:
     import builtins

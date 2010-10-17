@@ -1,8 +1,9 @@
+#!/usr/bin/env python
 # Copyright (c) 2010 Jan Kaliszewski (zuo). All rights reserved.
 # Licensed under the MIT License.
 # Python 2.4+ & 3.x -compatibile.
 
-"""Quick test."""
+"""Quick test and, at once, usage examples :)"""
 
 import unittest
 from __init__ import *
@@ -18,7 +19,7 @@ class SimpleTest(unittest.TestCase):
         global A, B, C, D, E, F
         del A, B, C, D, E, F
 
-    def _test_and_get_instance(self):
+    def _test_and_get_instance(self, slots_ok=True):
         self.assertFalse(isinstance(F, E))
         self.assertFalse(isinstance(F, A))
         self.assertTrue(hasattr(F, 'a_slot'))
@@ -31,8 +32,13 @@ class SimpleTest(unittest.TestCase):
             method = getattr(obj, name, obj.x)
             self.assertTrue(method(), name)
         A().x = 3
-        # attribute not included in __slots__ => AttributeError
-        self.assertRaises(AttributeError, setattr, obj, 'aaa', 3)
+        if slots_ok:
+            # attribute not included in __slots__ => AttributeError
+            self.assertRaises(AttributeError, setattr, obj, 'aaa', 3)
+        else:
+            try: obj.aaa = 3
+            except AttributeError:
+                self.fail()
         return obj
 
     @staticmethod
@@ -54,7 +60,7 @@ class SimpleTest(unittest.TestCase):
         F.x = self._make_method('x')
         return self._test_and_get_instance()
 
-    def _test_clone_and_get_instance(self, base_class):
+    def _test_clone_and_get_instance(self, base_class, to_clone=None):
         # only global classes can be cloned
         global A, B, C, D, E, F
         class A(base_class): a = self._make_method('a')
@@ -73,10 +79,10 @@ class SimpleTest(unittest.TestCase):
                 C.c(self)
                 D.d(self)
                 return 'e'
-        F = clone(E, slots='a_slot2')
+        F = clone(E, slots='a_slot2', to_clone=to_clone)
         F.f = self._make_method('f')
         F.x = self._make_method('x')
-        return self._test_and_get_instance()
+        return self._test_and_get_instance(slots_ok=(to_clone is None))
 
     def _test_dict(self, obj):
         obj['aaa'] = 3
@@ -90,10 +96,16 @@ class SimpleTest(unittest.TestCase):
         self._test_dict(self._test_flatmirror_and_get_instance(dict))
 
     def test_object_subclass_clone(self):
-        self._test_flatmirror_and_get_instance(object)
+        self._test_clone_and_get_instance(object)
 
     def test_dict_subclass_clone(self):
         self._test_dict(self._test_clone_and_get_instance(dict))
+
+    def test_object_subclass_shallow_clone(self):
+        self._test_clone_and_get_instance(object, to_clone=())
+
+    def test_dict_subclass_shallow_clone(self):
+        self._test_dict(self._test_clone_and_get_instance(dict, to_clone=()))
 
 try:
     from collections import Iterable, Mapping, MutableMapping
