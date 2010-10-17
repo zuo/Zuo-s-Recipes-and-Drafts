@@ -43,7 +43,7 @@ def flatmirror(cls=None, add=None, exclude=('__dict__', '__weakref__'),
 
     It doesn't work well with classes containing methods using super() or
     getting unbound methods from the classes themselves or superclasses
-     (the latter issue doesn't apply to Python 3.x). In such cases try
+    (the latter issue doesn't apply to Python 3.x). In such cases try
     using clonetools.clonecls() instead.
 
     Arguments:
@@ -53,7 +53,7 @@ def flatmirror(cls=None, add=None, exclude=('__dict__', '__weakref__'),
     * add [default: {}]
       -- a dictionary of attributes to be added to the created class;
       the __slots__ attribute is treated specially -- names it contain
-      are added to __slots__ names found in the mixin class and/or its
+      are added to __slots__ names found in the mixin class and/or in its
       super classes;
     * exclude [default: ('__dict__', '__weakref__')]
       -- a sequence of names of attributes that should not be mirrored;
