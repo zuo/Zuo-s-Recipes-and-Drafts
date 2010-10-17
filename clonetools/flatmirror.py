@@ -3,6 +3,12 @@
 # Python 2.4+ & 3.x -compatibile.
 # To be used as part of the `clonetools' package or as a standalone module.
 
+"""
+flatmirror() function makes a "flat mirror" of a given class, i.e. fake
+subclass with reduced class hierarchy. It has significant limitations
+(see: the function documentation string).
+"""
+
 from sys import version_info
 try:
     from abc import ABCMeta

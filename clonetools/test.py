@@ -3,7 +3,7 @@
 # Licensed under the MIT License.
 # Python 2.4+ & 3.x -compatibile.
 
-"""Quick test and, at once, usage examples :)"""
+"""A quick test and, at once, some usage examples..."""
 
 import unittest
 from __init__ import *

@@ -21,7 +21,9 @@ These functions (especially class cloning) are not 100%-foolproof
 (partly, by the nature of the problem).
 
 Known bug: function closures and default argument values are not copied
-and adjusted when cloning class methods (could be corrected in the future).
+and adjusted when cloning class methods (could be fixed in the future)
+-- it causes problems, e.g. with classes defined somewhere else than
+within global (module) scope.
 
 Auxiliary container classes:
 * IdentContainer -- with identity-based presence test ('in'-test).
