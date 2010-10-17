@@ -4,8 +4,8 @@
 # To be used as part of the `clonetools' package or as a standalone module.
 
 """
-flatmirror() function makes a "flat mirror" of a given class, i.e. fake
-subclass with reduced class hierarchy. It has significant limitations
+flatmirror() function makes a "flat mirror" of a given class, i.e. a fake
+subclass -- reducing class hierarchy. It has significant limitations
 (see: the function documentation string).
 """
 
