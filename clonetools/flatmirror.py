@@ -37,7 +37,7 @@ def flatmirror(cls=None, add=None, exclude=('__dict__', '__weakref__'),
     """Create a new "flat mirror" (fake subclass) of a class.
 
     The newly created class obtains methods/attributes of the given
-    "model-class" and its super classes (direct and indirect base classes).
+    "mixin-class" and its super classes (direct and indirect base classes).
     But the real super class hierarchy of the new class is flattened --
     i.e. limited to the classes mentioned in the bases argument.
 
@@ -48,12 +48,12 @@ def flatmirror(cls=None, add=None, exclude=('__dict__', '__weakref__'),
 
     Arguments:
     * cls
-      -- the direct base class (the "model class") [if omitted, rest of
+      -- the direct base class (the "mixin class") [if omitted, rest of
       arguments will be used to create ready-to-call class decorator];
     * add [default: {}]
       -- a dictionary of attributes to be added to the created class;
       the __slots__ attribute is treated specially -- names it contain
-      are added to __slots__ names found in model class and/or in its
+      are added to __slots__ names found in the mixin class and/or its
       super classes;
     * exclude [default: ('__dict__', '__weakref__')]
       -- a sequence of names of attributes that should not be mirrored;
@@ -132,14 +132,14 @@ def _get_meta_params(cls, dict_factory, metacls, metacls_kwargs):
         metacls_kwargs = {}
     return dict_factory, metacls, metacls_kwargs
 
-def _get_registered_cls(newcls, modelcls, register):
+def _get_registered_cls(newcls, mixincls, register):
     if register == 'abc':
-        if isinstance(modelcls, ABCMeta):
-            register = modelcls.register
+        if isinstance(mixincls, ABCMeta):
+            register = mixincls.register
         else:
             register = None
     elif register and isinstance(register, bool):
-        register = modelcls.register
+        register = mixincls.register
     if register:
         register(newcls)
     return newcls
