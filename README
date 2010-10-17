@@ -4,7 +4,7 @@ Rather small pieces of (probably useful) code by Jan Kaliszewski (zuo)
 
 Copyright (c) 2010 Jan Kaliszewski (zuo). All rights reserved.
 Licensed under the MIT License -- applies to all files:
- 
+
 ----------------------------------------------------------------------
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30,7 +30,7 @@ THE SOFTWARE.
 Repo content:
 
 * clonetools/*
-  -- IT'S A PRE-ALPHA VERSION!
+  -- IT'S AN ALPHA VERSION!
   -- tools for cloning classes and functions, useful when you need to
      "copy" a class or a function to adjust it (e.g. adding __slots__
      to all base clases), not hurting the original class/function.

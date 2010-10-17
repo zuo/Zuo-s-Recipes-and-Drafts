@@ -17,6 +17,12 @@ Public functions:
 * clone -- clone a function or a class (it's a convenience function);
 * flatmirror -- create a "flat mirror" (fake subclass) of a class.
 
+These functions (especially class cloning) are not 100%-foolproof
+(partly, by the nature of the problem).
+
+Known bug: function closures and default argument values are not copied
+and adjusted when cloning class methods (could be corrected in the future).
+
 Auxiliary container classes:
 * IdentContainer -- with identity-based presence test ('in'-test).
 * ContainsAll -- instances always returns True for presence test.
