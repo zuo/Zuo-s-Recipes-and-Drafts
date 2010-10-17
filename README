@@ -26,7 +26,7 @@ Repo content:
      with standard Python logging framework;
   -- quite flexible tool and just about 50 efective SLOC (excluding the
      example script);
-  -- caution: it's rather for debugging than production environments
-     (programs noticeably slow down).
+  -- it's rather for debugging than production environments (programs
+     noticeably slow down).
 
 * ... [to be continued :)]
