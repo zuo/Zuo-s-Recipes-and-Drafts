@@ -70,6 +70,8 @@ def flatmirror(cls=None, add=None, exclude=('__dict__', '__weakref__'),
          or 'abc' -- call cls.register only if isinstance(cls, abc.ABCMeta),
          or True -- call cls.register (unconditionally),
          or False -- do not call anything (unconditionally).
+
+    See clonetools/test.py for some usage examples.
     """
     if cls is None:
         return partial(flatmirror, add=add, exclude=exclude, bases=bases,

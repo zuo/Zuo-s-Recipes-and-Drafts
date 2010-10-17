@@ -97,6 +97,8 @@ def clonefunc(func, to_update=None):  # side effect on the to_update list!
          __dict__, kw-defaults, annotations) will be copied using their
          copy() methods; additionaly, for a list, all copied dictionaries
          will be appended to that list.
+
+    See clonetools/test.py for some usage examples.
     """
     func_globals = getattr(func, FUNC_ATTR_MAP['__globals__'])
     lets_append = isinstance(to_update, list)
