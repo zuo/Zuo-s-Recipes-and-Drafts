@@ -3,7 +3,7 @@
 `--------------------------------------------------------------------'
 
 Copyright (c) 2010 Jan Kaliszewski (zuo). All rights reserved.
-Licensed under the MIT License -- applies to all files (see: LICENSE).
+Licensed under the MIT License (see: LICENSE).
 
 ----------------------------------------------------------------------
 
@@ -21,6 +21,10 @@ Repo content:
     -- for making "flat mirrors" of classes i.e. fake subclasses with
        reduced class hierarchy.
 
+* mplogfilehandler.py [plus mplogfilehandler_quicktest.py]
+  -- simple multiprocess-safe logging and interprocess locking classes;
+  -- Unix implementation + generic abstract classes.
+
 * trace_logging.py
   -- just import, call and log your selected call/return/exception
      events with standard Python logging framework;
@@ -29,4 +33,4 @@ Repo content:
   -- it's rather for debugging than production environments (programs
      noticeably slow down).
 
-* ... [to be continued :)]
+* ...to be continued :)
