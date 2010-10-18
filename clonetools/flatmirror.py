@@ -74,8 +74,8 @@ def flatmirror(cls=None, add=None, exclude=('__dict__', '__weakref__'),
       -- keyword arguments for that metaclass;
     * register [default: 'abc']
       -- a callable to be called with the newly created class as the argument,
+         or False -- do not call anything,
          or True -- call cls.register (unconditionally),
-         or False -- do not call anything (unconditionally),
          or 'abc' -- call cls.register only if isinstance(cls, abc.ABCMeta).
 
     See clonetools/test.py for some usage examples.
