@@ -2,19 +2,20 @@
 |  Zuo's Recipes and Drafts: small pieces of (probably useful) code  |
 `--------------------------------------------------------------------'
 
+[code in Python, unless something else marked explicitly]
+
 Copyright (c) 2010 Jan Kaliszewski (zuo). All rights reserved.
 Licensed under the MIT License (see: LICENSE).
 
 ----------------------------------------------------------------------
 
 Repo content:
-[code in Python, unless something else marked explicitly]
 
 * clonetools/*
   -- tools for cloning classes and functions, useful when you need to
      "copy" a class or a function to adjust it (e.g. adding __slots__
      to all base clases -- that is even automatized...), not hurting
-     the original class/function;
+     the original class/function object(s);
   -- IT'S AN ALPHA VERSION!
 
   * clonetools/flatmirror.py
@@ -22,16 +23,20 @@ Repo content:
     -- for making "flat mirrors" of classes, i.e. fake subclasses with
        reduced class hierarchy.
 
+* flocktests.py
+  -- tiny fcntl.flock() (Unix file lock) behaviour sampling script;
+  -- rather exemplum/educational piece of code than a utility script.
+
 * mplogfilehandler.py [plus mplogfilehandler_quicktest.py]
   -- simple multiprocess-safe logging and interprocess locking classes;
-  -- Unix implementation + generic abstract classes.
+  -- Unix implementation (flock-based) + generic abstract classes.
 
 * trace_logging.py
-  -- just import, call and log your selected call/return/exception
-     events with standard Python logging framework;
-  -- quite flexible tool and just about 50 efective SLOC (excluding
+  -- just import, call and log your selected call/return/exception/etc.
+     events (you can use the standard Python logging framework);
+  -- quite flexible tool and about 50 efective SLOC only (excluding
      the example script);
-  -- it's rather for debugging than production environments (programs
+  -- rather for debugging than production environments (programs
      noticeably slow down).
 
 * ...to be continued :)
