@@ -1,7 +1,7 @@
 # Copyright (c) 2010 Jan Kaliszewski (zuo). All rights reserved.
 # Licensed under the MIT License.
 # Python 2.4+ & 3.x -compatibile.
-# To be used as part of the `clonetools' package or as a standalone module.
+# This is a part of clonetools that can be used also as a standalone module.
 
 """
 flatmirror() function makes a "flat mirror" of a given class, i.e. a fake
