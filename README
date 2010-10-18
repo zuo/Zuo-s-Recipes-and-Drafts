@@ -13,12 +13,13 @@ Repo content:
 * clonetools/*
   -- tools for cloning classes and functions, useful when you need to
      "copy" a class or a function to adjust it (e.g. adding __slots__
-     to all base clases), not hurting the original class/function;
+     to all base clases -- that is even automatized...), not hurting
+     the original class/function;
   -- IT'S AN ALPHA VERSION!
 
   * clonetools/flatmirror.py
     -- a part of clonetools that can be used as a standalone module;
-    -- for making "flat mirrors" of classes i.e. fake subclasses with
+    -- for making "flat mirrors" of classes, i.e. fake subclasses with
        reduced class hierarchy.
 
 * mplogfilehandler.py [plus mplogfilehandler_quicktest.py]
