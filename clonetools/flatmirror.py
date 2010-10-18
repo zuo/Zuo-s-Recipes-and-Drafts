@@ -43,8 +43,8 @@ def flatmirror(cls=None, add=None, exclude=('__dict__', '__weakref__'),
                metacls_kwargs=None, register='abc'):
     """Create a new "flat mirror" (fake subclass) of a class.
 
-    The newly created class obtains methods/attributes of the given
-    "mixin-class" and its super classes (direct and indirect base classes).
+    The newly created class obtains methods/attributes of the given class
+    ("mixin-class") and its super classes (direct + indirect base classes).
     But the real super class hierarchy of the new class is flattened --
     i.e. limited to the classes mentioned in the bases argument.
 
