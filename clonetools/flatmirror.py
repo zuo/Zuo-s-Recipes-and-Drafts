@@ -60,7 +60,7 @@ def flatmirror(cls=None, add=None, exclude=('__dict__', '__weakref__'),
     * add [default: {}]
       -- a dictionary of attributes to be added to the created class;
       the __slots__ attribute is treated specially -- names it contain
-      are added to __slots__ names found in the mixin class and/or in its
+      are added to names found in __slots__ of the "mixin class" and its
       super classes;
     * exclude [default: ('__dict__', '__weakref__')]
       -- a sequence of names of attributes that should not be mirrored;
