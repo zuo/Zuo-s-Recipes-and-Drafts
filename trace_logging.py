@@ -51,7 +51,7 @@ def trace_logging_on(refdir=default_refdir,    # reference-point directory path
         path = relpath(frame.f_code.co_filename, refdir)  # relative to refdir
         # path-prefix-based scope filtering (negative, i.e. False lets by)
         if path.startswith(negprefix):
-            return None
+            return None  # (<- None to discontinue tracing in sub-scopes)
         # adding some locals (to be used to format filtering/logging arguments)
         name = frame.f_code.co_name
         argrepr = reprfunc(arg)
