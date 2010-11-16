@@ -8,7 +8,7 @@ Tools for cloning classes and functions.
 CAUTION: TREAT IT AS AN ALPHA VERSION! Any feedback is welcome.
 
 Useful (hopefully...) when you need to "copy" a class or a function
-to adjust it (e.g. adding __slots__ to all base clases), not hurting
+to adjust it (e.g. adding __slots__ to all base clases), without hurting
 the original class/function objects.
 
 Public functions:
@@ -17,8 +17,8 @@ Public functions:
 * clone -- clone a function or a class (it's a convenience function);
 * flatmirror -- create a "flat mirror" (fake subclass) of a class.
 
-These functions (especially class cloning) are not 100%-foolproof
-(partly, by the nature of the problem).
+These functions (especially class cloning) are not 100% reliable
+(partly, by the nature of the task).
 
 Known bug: function closures and default argument values are not copied
 and adjusted when cloning class methods (could be fixed in the future)
@@ -27,7 +27,7 @@ within global (module) scope.
 
 Auxiliary container classes:
 * IdentContainer -- with identity-based presence test ('in'-test).
-* ContainsAll -- instances always returns True for presence test.
+* ContainsAll -- instances always return True for presence test.
 """
 
 from inspect import isfunction
