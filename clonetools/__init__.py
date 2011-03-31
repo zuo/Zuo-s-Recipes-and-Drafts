@@ -62,7 +62,8 @@ else:
     }
 BUILTIN_OBJS = vars(builtins).values()
 SOME_FUNC_ATTRS = [FUNC_ATTR_MAP.get(a, a)
-                   for a in ('__defaults__', '__doc__', '__module__')]
+                   for a in ('__defaults__', '__doc__',
+                             '__module__', '__name__')]
 SOME_FUNC_DICTS = [FUNC_ATTR_MAP.get(a, a)
                    for a in ('__dict__', '__annotations__', '__kwdefaults__')]
 
@@ -134,15 +135,17 @@ def clonecls(cls, slots=None, exclude=('__dict__', '__weakref__'),
       -- the class to be cloned;
     * slots [default: None]
       -- if not None, __slots__ attribute is added to the cloned class
-      and its cloned super classes; the actual argument content is added
-      to the highest possible class in the hierarchy, rest are left empty;
-      all __slots__ names found in classes are preserved;
+      and its cloned superclasses; the actual argument content is added
+      to the highest possible class in the hierarchy, the remaining __slots__
+      attributes are left empty; all __slots__ contents found in classes are
+      preserved;
     * exclude [default: ('__dict__', '__weakref__')]
       -- a sequence of names of attributes that should not be mirrored/cloned;
-    * to_clone [default: all super classes of cls]
-      -- a container of super classes that should be cloned, apart from cls;
+    * to_clone [default: all superclasses of cls (excluding cls)]
+      -- a container of superclasses that should be cloned (excluding cls);
     * dict_factory [default: type(cls.__dict__); but dict if it was dictproxy]
-      -- a factory (type/function) to make __dict__ for the created class;
+      -- a factory (type/function) to make the __dict__ attribute of the
+      created class;
     * metacls [default: type(cls)]
       -- a factory (metaclass) to be used to create the class;
     * metacls_kwargs [default: {}]
@@ -182,7 +185,7 @@ def clonecls(cls, slots=None, exclude=('__dict__', '__weakref__'),
 
 
 def clone(*args, **kwargs):
-    """Call clonefunc()/clonecls() (depending on first argument type)."""
+    """Call clonefunc()/clonecls() (depending on the first argument type)."""
     if isfunction(args[0]):
         return clonefunc(*args, **kwargs)
     else:

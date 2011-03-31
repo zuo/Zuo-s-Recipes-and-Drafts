@@ -1,12 +1,13 @@
 #!/usr/bin/python
-# Unix/Linux only (as the 'fcntl' module is). Python >=2.6/3.x compatibile.
+# For Unix/Linux only (just as the 'fcntl' module is).
+# Python >=2.6/3.x compatibile.
 # Copyright (c) 2010 Jan Kaliszewski (zuo). All rights reserved.
 # Licensed under the MIT License.
 
 """
-flocktests.py: fcntl.flock(LOCK_EX|LOCK_NB) behaviour sampling -- with one
-file object or separate file objects (pointing to the same filesystem path),
-with/without threading or forking.
+flocktests.py: a fcntl.flock(LOCK_EX|LOCK_NB) behaviour sampling script
+-- with one file object or separate file objects (which point to the same
+filesystem path), with/without threading or forking.
 """
 
 from __future__ import print_function
@@ -39,7 +40,7 @@ class lockpath(object):
         return cls(path, _keep=True)
 
     def __enter__(self):
-        "Enter a with-block binding the file to the as-clause target"
+        "Enter a with-block assigning the file to the as-clause target"
         if self.locked:
             return self.file
         else:

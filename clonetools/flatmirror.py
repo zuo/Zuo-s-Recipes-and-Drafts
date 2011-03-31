@@ -1,11 +1,11 @@
 # Copyright (c) 2010 Jan Kaliszewski (zuo). All rights reserved.
 # Licensed under the MIT License.
 # Python 2.4+ & 3.x -compatibile.
-# This is a part of clonetools that can be used also as a standalone module.
+# This is a submodule that can also be used as a standalone module.
 
 """
-flatmirror() function makes a "flat mirror" of a given class, i.e. a fake
-subclass -- reducing class hierarchy. It has significant limitations
+flatmirror() function makes a "flat mirror", i.e. a fake subclass of
+a given class -- reducing class hierarchy. It has substantial limitations
 (see: the function documentation string).
 """
 
@@ -44,39 +44,41 @@ def flatmirror(cls=None, add=None, exclude=('__dict__', '__weakref__'),
     """Create a new "flat mirror" (fake subclass) of a class.
 
     The newly created class obtains methods/attributes of the given class
-    ("mixin-class") and its super classes (direct + indirect base classes).
-    But the real super class hierarchy of the new class is flattened --
-    i.e. limited to the classes mentioned in the bases argument.
+    ('cls' argument) and its superclasses (direct + indirect ancestors).
+    But the real superclass hierarchy of the new class is flattened --
+    i.e. limited to the classes mentioned in the 'bases' argument.
 
-    It doesn't work well with classes containing methods using super() or
-    getting unbound methods from the classes themselves or superclasses
-    (the latter issue doesn't apply to Python 3.x). In such cases try
-    using clonetools.clonecls() instead.
+    It would not work well with a class containing a method which uses
+    super() or which gets an unbound method from the class or its
+    superclass  (the latter issue does not apply to Python 3.x). In such
+    a case try using clonetools.clonecls() instead.
 
     Arguments:
     * cls
-      -- the direct base class (the "mixin class") [if omitted, rest of
-      arguments will be used to create ready-to-call class decorator];
+      -- the direct base class (the "mixin class") [if omitted, the rest
+      of arguments will be used to create a ready-to-call class decorator];
     * add [default: {}]
       -- a dictionary of attributes to be added to the created class;
-      the __slots__ attribute is treated specially -- names it contain
-      are added to names found in __slots__ of the "mixin class" and its
-      super classes;
+      the __slots__ attribute is treated specially -- names it contains
+      are added to names found in __slots__ of the "mixin class" and of
+      each of its superclasses;
     * exclude [default: ('__dict__', '__weakref__')]
       -- a sequence of names of attributes that should not be mirrored;
     * bases [default: (object,)]
       -- a tuple of types to be used as base classes for the created class;
-    * dict_factory [default: type(cls.__dict__); but dict if it was dictproxy]
-      -- a factory (type/function) to make __dict__ for the created class;
+    * dict_factory
+      [default: type(cls.__dict__); but dict if the type was dictproxy]
+      -- a factory (type/function) to make the __dict__ attribute for
+      the created class;
     * metacls [default: type(cls)]
       -- a factory (metaclass) to be used to create the class;
     * metacls_kwargs [default: {}]
       -- keyword arguments for that metaclass;
     * register [default: 'abc']
       -- a callable to be called with the newly created class as the argument,
-         or False -- do not call anything,
+         or 'abc' -- call cls.register only if isinstance(cls, abc.ABCMeta),
          or True -- call cls.register (unconditionally),
-         or 'abc' -- call cls.register only if isinstance(cls, abc.ABCMeta).
+         or False -- do not call anything (unconditionally).
 
     See clonetools/test.py for some usage examples.
     """
