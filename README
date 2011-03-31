@@ -4,7 +4,7 @@
 
 [code in Python, unless explicitly marked differently]
 
-Copyright (c) 2010 Jan Kaliszewski (zuo). All rights reserved.
+Copyright (c) 2010, 2011 Jan Kaliszewski (zuo). All rights reserved.
 Licensed under the MIT License (see: LICENSE).
 
 ----------------------------------------------------------------------
@@ -30,6 +30,12 @@ Repo content:
 * mplogfilehandler.py [plus mplogfilehandler_quicktest.py]
   -- simple multiprocess-safe logging and interprocess locking classes;
   -- Unix implementation (flock-based) + generic abstract classes.
+
+* namedtuple_with_abc.py
+  -- if you need to define named tuple subclasses (including reusable abstract
+     ones) adding/overriding some methods or simply would like to define your
+     named tuple classes in a "classic" inheritance-based as well as DRY way
+     (without repeating class names...) -- this recipe is for you.
 
 * trace_logging.py
   -- just import, call and log your selected call/return/exception/etc.
