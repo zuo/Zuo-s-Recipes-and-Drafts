@@ -32,10 +32,12 @@ Repo content:
   -- Unix implementation (flock-based) + generic abstract classes.
 
 * namedtuple_with_abc.py
-  -- if you need to define named tuple subclasses (including reusable abstract
-     ones) adding/overriding some methods or simply would like to define your
-     named tuple classes in a "classic" inheritance-based as well as DRY way
-     (without repeating class names...) -- this recipe is for you.
+  -- if you need to define named tuple subclasses (including reusable
+     abstract ones) adding/overriding some methods; to have the named
+     tuple ABC (abstract base class) for isinstance()/issubclass()
+     tests; or simply would like to define your named tuple classes in
+     a class-syntax-based and DRY way (without repeating type names...)
+     -- this recipe is for you.
 
 * trace_logging.py
   -- just import, call and log your selected call/return/exception/etc.
