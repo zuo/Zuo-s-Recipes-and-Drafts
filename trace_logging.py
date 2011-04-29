@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (c) 2010 Jan Kaliszewski (zuo). All rights reserved.
+# Copyright (c) 2010-2011 Jan Kaliszewski (zuo). All rights reserved.
 # Licensed under the MIT License. Python 2.6/2.7-compatibile.
 
 import os.path
