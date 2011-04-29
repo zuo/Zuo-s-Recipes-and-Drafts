@@ -42,7 +42,7 @@ def trace_logging_on(refdir=default_refdir,    # reference-point directory path
         logger = getLogger(logger)
     log = getattr(logger, loggermethod)
     relpath = os.path.relpath
-    reprv = (lambda s: '=' + reprfunc(s))
+    formatvalue = (lambda s: '=' + reprfunc(s))
     filterarg_format = filterarg.format
 
     def tracer(frame, event, arg):
@@ -56,7 +56,9 @@ def trace_logging_on(refdir=default_refdir,    # reference-point directory path
         name = frame.f_code.co_name
         argrepr = reprfunc(arg)
         if event == 'call':
-            callargs = formatargvalues(*getargvalues(frame), formatvalue=reprv)
+            argvalues = (getargvalues(frame) if name != '<genexpr>'
+                         else ([],) + getargvalues(frame)[1:])
+            callargs = formatargvalues(*argvalues, formatvalue=formatvalue)
         elif event == 'exception':
             traceback = ''.join(format_exception(*arg))
         pattern_fields = locals()
