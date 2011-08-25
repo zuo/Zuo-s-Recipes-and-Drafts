@@ -348,7 +348,7 @@ class AutoAuxMeta(type):
     def __new__(mcs, name, bases, attr_dict):
         return aux(type.__new__(mcs, name, bases, attr_dict))
 
-# (Py2.x/3.x-compatibile way to create class with custom metaclass)
+# (here: Py2.x/3.x-compatibile way to create a class with a custom metaclass)
 AutoAuxBase = AutoAuxMeta('AutoAuxBase', (object,), {'__doc__':
     """`AutoAuxMeta`-created base class: `aux()`-decorates its subclasses."""})
 
