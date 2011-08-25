@@ -16,10 +16,10 @@ This module provides an easy way to define and use your own `around`/`before`
 /`after` auxiliary methods, similar to those used in CLOS (Common Lisp Object
 System).
 
-Implementing the module I used a few native Python features:
+Implementing the module I've used a few native Python features:
 
 * class and function decorators,
-* class inheritance plus `super()` built-in function,
+* class inheritance plus the `super()` built-in function,
 * private name mangling (to free users from necessity of redundant class name
   retyping).
 
