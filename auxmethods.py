@@ -26,8 +26,8 @@ Implementing the module I've used a few native Python features:
 How to use it
 -------------
 
-Decorate your classes using `aux()` class decorator and do the same with
-chosen method using `primary()` function decorator:
+Decorate your classes using the `aux()` class decorator and do the same with
+chosen method using the `primary()` function decorator::
 
     from auxmethods import aux, primary
 
@@ -40,7 +40,7 @@ chosen method using `primary()` function decorator:
             return '\nmy_method() was called with argument %r\n' % s
 
         def my_method_around(self, s):
-            # `around' aux method (aux methods don't need to be decorated)
+            # `around` aux method (aux methods don't need to be decorated)
             print('Parent/around-aux: %r' % s)
             # equivalent to CLOS's call-next-method:
             result = self.__my_method_around(s)
@@ -63,12 +63,12 @@ chosen method using `primary()` function decorator:
         def my_method_after(self, s):
             print('Child/after-aux: %r' % s)
 
-Now, if you execute this:
+Now, if you execute this::
 
     obj = Child()
     print(obj.my_method('spam'))
 
-...the following text will be printed:
+...the following text will be printed::
 
     Child/around-aux: 'spam'
     Parent/around-aux: 'spam'
@@ -83,7 +83,7 @@ Now, if you execute this:
     my_method() was called with argument 'spam'
 
 In the source, below the "if __name__ == '__main__'" condition, you'll find
-a bit more interesting example.
+a slightly more interesting example.
 
 A few remarks
 -------------
@@ -105,13 +105,12 @@ A few remarks
   decorator and must be a new style-class (a direct or indirect `object`
   type subclass).
 
-* Class-decorating with '@':
+* Class-decorating with '@'::
 
     @aux
     class SomeClass(object):
-        ...
 
-  ...is a Py2.6+/3.x syntax. The Py2.5 equivalent is:
+  ...is a Py2.6+/3.x syntax. The Py2.5 equivalent is::
 
     SomeClass = aux(SomeClass)  # below the class definition
 
@@ -131,7 +130,7 @@ A few remarks
   * `__spam`, `__spam_around`, `__spam_before`, `__spam_after` -- names of
     special helper methods (see below).
 
-  You should treat these names as reserved and not define or set such class
+  You should treat these names as reserved and should not set such class
   /instance attributes in your whole class hierarchy (unless you really know
   what you do...). Please note that such a method will not be added if its
   name is already present in class __dict__ (that may lead to erroneous
@@ -175,16 +174,16 @@ A few remarks
   appropriate methods exist in superclasses.
 
 * `self.__<primary method name>_around(<arguments>)` works similarly to
-  CLOS's `call-next-method` in `:around`-context -- i.e. it calls:
+  CLOS's `call-next-method` in `:around`-context -- i.e. it calls::
 
     <superclass>.<primary method name>_around(<arguments>)
 
-  which *may* call (and return the result of) another:
+  which *may* call (and return the result of) another::
 
     ...__<primary method name>_around(<arguments>)
 
   and so on... Finally, if there is no next `around` aux method to call,
-  the following methods are called:
+  the following methods are called::
 
     self.<primary method name>_before(<arguments>)   # if the method exists
     self.<primary method name>_primary(<arguments>)  # may return something
@@ -216,7 +215,7 @@ __all__ = (
 
 class ClassNameConflictError(Exception):
     """
-    aux()-ed class and superclass names conflict (after stripping leading '_').
+    Conflict: class names are identical after stripping leading underscores.
     """
 
     def __str__(self):
@@ -345,13 +344,13 @@ def primary(func):
 # convenience classes (any of them can be used *optionally*...)
 
 class AutoAuxMeta(type):
-    """Convenience metaclass: aux()-decorates all classes created by it."""
+    """Convenience metaclass: `aux()`-decorates classes created by it."""
     def __new__(mcs, name, bases, attr_dict):
         return aux(type.__new__(mcs, name, bases, attr_dict))
 
 # (Py2.x/3.x-compatibile way to create class with custom metaclass)
 AutoAuxBase = AutoAuxMeta('AutoAuxBase', (object,), {'__doc__':
-    """Convenience base class: its metaclass is AutoAuxMeta."""})
+    """`AutoAuxMeta`-created base class: `aux()`-decorates its subclasses."""})
 
 
 #
