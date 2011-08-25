@@ -12,8 +12,9 @@
 CLOS-like `around`/`before`/`after` auxiliary methods
 =====================================================
 
-This module provides an easy way to use your own `around`/`before`/`after`
-auxiliary methods, similar to those used in CLOS (Common Lisp Object System).
+This module provides an easy way to define and use your own `around`/`before`
+/`after` auxiliary methods, similar to those used in CLOS (Common Lisp Object
+System).
 
 To reach that goal I've used a few native Python features:
 
