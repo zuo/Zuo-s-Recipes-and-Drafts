@@ -119,7 +119,7 @@ A few remarks
 
 * If you don't use any special metaclasses you can make your life easier by
   using `AutoAuxBase` class as the root of your class hierarchy -- it will
-  automatically decorate its ancestor classes with the `aux()` decorator
+  automatically decorate its subclasses with the `aux()` decorator
   (alternatively you can declare `AutoAuxMeta` class as the metaclass).
 
 * `aux()` decorator adds some additional methods to the class. If the primary
@@ -131,11 +131,11 @@ A few remarks
   * `__spam`, `__spam_around`, `__spam_before`, `__spam_after` -- names of
     special helper methods (see below).
 
-  You should consider these names as reserved and not define/set such class/
-  /instance attributes in whole your class hierarchy (unless you really know
+  You should treat these names as reserved and not define or set such class
+  /instance attributes in your whole class hierarchy (unless you really know
   what you do...). Please note that such a method will not be added if its
-  name is already present in class __dict__ (which may lead to erroneous
-  behaviour).
+  name is already present in class __dict__ (that may lead to erroneous
+  behaviour unless you have placed there another method consciously...).
 
   Also, please note that `spam_primary()` and `__spam()` will not be added if
   the class doesn't contain the `spam()` primary method; and `__spam_around()`
