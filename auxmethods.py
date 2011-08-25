@@ -91,7 +91,7 @@ A few remarks
   example, if your primary method name is `spam`, your aux method names
   will be: `spam_around`, `spam_before`, `spam_after`.
 
-* All auxiliary (`*_before`, `*_after`, `*_around`) methods are optional: you
+* All auxiliary (`*_around`, `*_before`, `*_after`) methods are optional: you
   don't need to define all of them. If you define any, at least one primary
   method (decorated with the `primary()` decorator) with the appropriate
   name should be defined somewhere in your class hierarchy.
@@ -109,7 +109,7 @@ A few remarks
     class SomeClass(object):
         ...
 
-  is a Py2.6+/3.x syntax; the Py2.5 equivalent would be:
+  ...is a Py2.6+/3.x syntax. The Py2.5 equivalent is:
 
     SomeClass = aux(SomeClass)  # below the class definition
 
@@ -125,15 +125,21 @@ A few remarks
 
   * `spam_primary` -- the method you defined as spam (now `spam()` is
     a wrapper responsible for all that `around`/`before`/`primary`/`after`
-    calls...)
+    calls...),
   * `__spam`, `__spam_around`, `__spam_before`, `__spam_after` -- names of
     special helper methods (see below).
 
-  (note that `spam_primary()` and `__spam()` will not be added if the class
-  doesn't contain the `spam()` primary method; and `__spam_around()`/
+  You should consider these names as reserved and not define/set such class/
+  /instance attributes in whole your class hierarchy (unless you really know
+  what you do...). Please note that such a method will not be added if its
+  name is already present in class __dict__ (which may lead to erroneous
+  behaviour).
+
+  Also, please note that `spam_primary()` and `__spam()` will not be added if
+  the class doesn't contain the `spam()` primary method; and `__spam_around()`
   /`__spam_before()`/`__spam_after()` will not be added if the class doesn't
   contain the corresponding `spam_around()`/`spam_before()`/`spam_after()`
-  aux method).
+  aux method.
 
 * The equivalents of CLOS's `call-next-method` are:
 
@@ -169,18 +175,18 @@ A few remarks
 * `self.__<primary method name>_around(<arguments>)` works similarly to
   CLOS's `call-next-method` in `:around`-context -- i.e. it calls:
 
-    * `<superclass>.<primary method name>_around(<arguments>)`
+    <superclass>.<primary method name>_around(<arguments>)
 
-  ...which *may* call (and return the result of):
+  which *may* call (and return the result of) another:
 
-    * `<superclass>.__<primary method name>_around(<arguments>)`
+    ...__<primary method name>_around(<arguments>)
 
-  ...and so on; finally, if there is no next `around` aux method to call,
+  and so on... Finally, if there is no next `around` aux method to call,
   the following methods are called:
 
-    * `self.<primary method name>_before(<arguments>)`   # if exists
-    * `self.<primary method name>_primary(<arguments>)`  # may return something
-    * `self.<primary method name>_after(<arguments>)`    # if exists
+    self.<primary method name>_before(<arguments>)   # if the method exists
+    self.<primary method name>_primary(<arguments>)  # may return something
+    self.<primary method name>_after(<arguments>)    # if the method exists
 
   ...and then the result of the `*_primary()` method *may* be returned by
   consecutive (chained in the class hierarchy) `around` aux methods.
@@ -208,11 +214,7 @@ __all__ = (
 
 class ClassNameConflictError(Exception):
     """
-    Raised when class names are identical after stripping leading underscores.
-
-    Such a situation in class hierarchy is forbidden when using aux/primary
-    methods because Python __name-mangling is involved when dealing with
-    CLOS `call-next-method`-like methods (__mymethod_around etc.).
+    aux()-ed class and superclass names conflict (after stripping leading '_').
     """
 
     def __str__(self):
