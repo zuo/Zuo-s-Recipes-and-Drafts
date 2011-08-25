@@ -50,39 +50,39 @@ class A(object):
         return ot('A.foo_around (begin)', arg) and ot(
             'A.foo_around (end)', arg, self.__foo_around(arg))
     @primary
-    def bar(self, arg):
-        return ot('A.bar', arg, self.__bar(arg))
-    def bar_before(self, arg):
-        return ot('A.bar_before', arg, self.__bar_before(arg))
-    def bar_after(self, arg):
-        return ot('A.bar_after', arg, self.__bar_after(arg))
-    def bar_around(self, arg):
-        return ot('A.bar_around (begin)', arg) and ot(
-            'A.bar_around (end)', arg, self.__bar_around(arg))
+    def _bar(self, arg):
+        return ot('A._bar', arg, self.___bar(arg))
+    def _bar_before(self, arg):
+        return ot('A._bar_before', arg, self.___bar_before(arg))
+    def _bar_after(self, arg):
+        return ot('A._bar_after', arg, self.___bar_after(arg))
+    def _bar_around(self, arg):
+        return ot('A._bar_around (begin)', arg) and ot(
+            'A._bar_around (end)', arg, self.___bar_around(arg))
 A = aux(A)
 
-class B(A):
+class _A_(A):
     @primary
     def foo(self, arg):
-        return ot('B.foo', arg, self.__foo(arg))
+        return ot('_A_.foo', arg, self.__foo(arg))
     def foo_before(self, arg):
-        return ot('B.foo_before', arg, self.__foo_before(arg))
+        return ot('_A_.foo_before', arg, self.__foo_before(arg))
     def foo_after(self, arg):
-        return ot('B.foo_after', arg, self.__foo_after(arg))
+        return ot('_A_.foo_after', arg, self.__foo_after(arg))
     def foo_around(self, arg):
-        return ot('B.foo_around (begin)', arg) and ot(
-            'B.foo_around (end)', arg, self.__foo_around(arg))
+        return ot('_A_.foo_around (begin)', arg) and ot(
+            '_A_.foo_around (end)', arg, self.__foo_around(arg))
     @primary
-    def bar(self, arg):
-        return ot('B.bar', arg, self.__bar(arg))
-    def bar_before(self, arg):
-        return ot('B.bar_before', arg, self.__bar_before(arg))
-    def bar_after(self, arg):
-        return ot('B.bar_after', arg, self.__bar_after(arg))
-    def bar_around(self, arg):
-        return ot('B.bar_around (begin)', arg) and ot(
-            'B.bar_around (end)', arg, self.__bar_around(arg))
-B = aux(B)
+    def _bar(self, arg):
+        return ot('_A_._bar', arg, self.___bar(arg))
+    def _bar_before(self, arg):
+        return ot('_A_._bar_before', arg, self.___bar_before(arg))
+    def _bar_after(self, arg):
+        return ot('_A_._bar_after', arg, self.___bar_after(arg))
+    def _bar_around(self, arg):
+        return ot('_A_._bar_around (begin)', arg) and ot(
+            '_A_._bar_around (end)', arg, self.___bar_around(arg))
+_A_ = aux(_A_)
 
 AB_TEST_PATTERN = """
 a.%(basename)s_primary('%(arg)s'); ot.check(self,
@@ -107,24 +107,24 @@ a.%(basename)s('%(arg)s'); ot.check(self,
     ['A.%(basename)s_around (end)', '%(arg)s',
         ['A.%(basename)s', '%(arg)s', None]])
 
-b.%(basename)s('%(arg)s'); ot.check(self,
-    ['B.%(basename)s_around (begin)', '%(arg)s'],
+_a_.%(basename)s('%(arg)s'); ot.check(self,
+    ['_A_.%(basename)s_around (begin)', '%(arg)s'],
     ['A.%(basename)s_around (begin)', '%(arg)s'],
     ['A.%(basename)s_before', '%(arg)s', None],
-    ['B.%(basename)s_before', '%(arg)s',
+    ['_A_.%(basename)s_before', '%(arg)s',
         ['A.%(basename)s_before', '%(arg)s', None]],
     ['A.%(basename)s', '%(arg)s', None],
-    ['B.%(basename)s', '%(arg)s',
+    ['_A_.%(basename)s', '%(arg)s',
         ['A.%(basename)s', '%(arg)s', None]],
     ['A.%(basename)s_after', '%(arg)s', None],
-    ['B.%(basename)s_after', '%(arg)s',
+    ['_A_.%(basename)s_after', '%(arg)s',
         ['A.%(basename)s_after', '%(arg)s', None]],
     ['A.%(basename)s_around (end)', '%(arg)s',
-        ['B.%(basename)s', '%(arg)s',
+        ['_A_.%(basename)s', '%(arg)s',
             ['A.%(basename)s', '%(arg)s', None]]],
-    ['B.%(basename)s_around (end)', '%(arg)s',
+    ['_A_.%(basename)s_around (end)', '%(arg)s',
         ['A.%(basename)s_around (end)', '%(arg)s',
-            ['B.%(basename)s', '%(arg)s',
+            ['_A_.%(basename)s', '%(arg)s',
                 ['A.%(basename)s', '%(arg)s', None]]]])
 """
 
@@ -166,7 +166,7 @@ class NewlinesCounter(FileContentAction, TimedAction):
 
     @primary
     def action(self, path, content):
-        """Get number of newlines in a given file content."""
+        """Get number of newlines in a given string."""
         result = content.count('\n')
         ot('NewlinesCounter.action', path, content, result,
            self.__action(path, content))
@@ -194,7 +194,7 @@ class SpacesAndNewlinesCounter(NewlinesCounter):
 
     @primary
     def action(self, path, content):
-        """Get number of spaces and newlines in file content (str)."""
+        """Get number of spaces and newlines in a given string."""
         ot('SpacesAndNewlinesCounter.action (begin)', path, content)
         spaces = content.count(' ')
         newlines = self.__action(path, content)
@@ -223,15 +223,15 @@ class TestSimple(unittest.TestCase):
             wnam.spam('spammish inquisition'),
             "WithNoAuxMethods.spam: 'spammish inquisition'")
 
-    def test_a_b(self):
+    def test_a_and_a(self):
         self.assertTrue(hasattr(A, 'foo_primary'))
-        self.assertTrue(hasattr(A, 'bar_primary'))
-        self.assertTrue(hasattr(B, 'foo_primary'))
-        self.assertTrue(hasattr(B, 'bar_primary'))
+        self.assertTrue(hasattr(A, '_bar_primary'))
+        self.assertTrue(hasattr(_A_, 'foo_primary'))
+        self.assertTrue(hasattr(_A_, '_bar_primary'))
         a = A()
-        b = B()
+        _a_ = _A_()
         exec(AB_TEST_PATTERN % dict(basename='foo', arg='spam'))
-        exec(AB_TEST_PATTERN % dict(basename='bar', arg='nee'))
+        exec(AB_TEST_PATTERN % dict(basename='_bar', arg='nee'))
 
 
 class TestMoreRealistic(unittest.TestCase):

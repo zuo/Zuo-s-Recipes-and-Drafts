@@ -16,11 +16,12 @@ This module provides an easy way to define and use your own `around`/`before`
 /`after` auxiliary methods, similar to those used in CLOS (Common Lisp Object
 System).
 
-To reach that goal I've used a few native Python features:
+Implementing the module I used a few native Python features:
 
 * class and function decorators,
 * class inheritance plus `super()` built-in function,
-* private name mangling (to avoid redundant class name typing).
+* private name mangling (to free users from necessity of redundant class name
+  retyping).
 
 How to use it
 -------------
@@ -362,8 +363,7 @@ if __name__ == '__main__':
     import time
 
     class TimedAction(AutoAuxBase):
-        # note: AutoAuxBase as a base automatically decorates your classes
-        # with aux()
+        # note: AutoAuxBase automatically decorates your classes with aux()
 
         def action_before(self, *args, **kwargs):
             """Start action timer."""
@@ -398,7 +398,7 @@ if __name__ == '__main__':
 
         @primary
         def action(self, path, content):
-            """Get number of newlines in a given file content."""
+            """Get number of newlines in a given string."""
             return content.count('\n')
 
         def action_before(self, path, *args):
@@ -425,7 +425,7 @@ if __name__ == '__main__':
 
         @primary
         def action(self, path, content):
-            """Get number of spaces and newlines in file content (str)."""
+            """Get number of spaces and newlines in a given string."""
             spaces = content.count(' ')
             newlines = self.__action(path, content)
             return spaces + newlines
