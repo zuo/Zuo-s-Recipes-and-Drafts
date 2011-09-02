@@ -116,7 +116,6 @@ if __name__ == '__main__':
     import random
     import sys
     import timeit
-    import unittest
 
 
     # universal approach -- useful in most situations when case number is
@@ -214,15 +213,15 @@ if __name__ == '__main__':
 
         @case(itsname=True)  # @case('shutdown') expressed in a DRY way
         def shutdown():
-            raise SystemExit
+            return 'shutdown'
 
-        @case('get-class', default=True, classmethod=True)
+        @case('get-class', classmethod=True)
         def get_class(cls):
             return cls
 
-        # only one case can be tagged as the default
-        # so we need to mask DefaultDictSwitch.something_else()
-        something_else = None
+        @case(*xrange(30000, 40000))
+        def many_keys():
+            return 'many_keys'
 
 
     # special-case optimization (for integer-only keys from limited range)
@@ -244,9 +243,19 @@ if __name__ == '__main__':
         for key in case_keys:
             x = switch[key](x[:10])
 
+    def test_standard2():
+        "another standard switch -- subclass with more cases"
+        switch = AdminCommandSwitch.switch
+        x = ''
+        for key in case_keys:
+            x = switch[key](x[:10])
+        assert switch['shutdown']() == 'shutdown'
+        assert switch['get-class']() is AdminCommandSwitch
+        assert switch[34567]() == 'many_keys'
+
     # faster than the standard one in some special cases (int-only keys)
     def test_list_based_range_default():
-        "list-based switch (default case support for keys within the range)"
+        "list-based switch (default case support for keys from the range)"
         switch = ListBasedSwitch.switch
         x = ''
         for key in case_keys:
@@ -265,14 +274,14 @@ if __name__ == '__main__':
                 x = default_case(x[:10])
 
     def test_dict_based_no_default():
-        "dict-based switch, no default case support"
+        "ordinary-dict-based switch, no default case support"
         switch = DictBasedSwitch.switch
         x = ''
         for key in case_keys:
             x = switch[key](x[:10])
 
     def test_dict_based_with_get():
-        "dict-based switch + dict.get()-based default case support"
+        "ordinary-dict-based switch + dict.get()-based default case support"
         switch = DictBasedSwitch.switch
         default_case = DictBasedSwitch.get_default_case()
         x = ''
@@ -280,7 +289,7 @@ if __name__ == '__main__':
             x = switch.get(key, default_case)(x[:10])
 
     def test_dict_based_with_try_except():
-        "dict-based switch + try/except-based default case support"
+        "ordinary-dict-based switch + try/except-based default case support"
         switch = DictBasedSwitch.switch
         default_case = DictBasedSwitch.get_default_case()
         _error = KeyError
@@ -292,7 +301,7 @@ if __name__ == '__main__':
                 x = default_case(x[:10])
 
     def test_if_elif():
-        "traditional if...elif...else... sequence"
+        "traditional if/elif.../else sequence"
         x = ''
         for key in case_keys:
             if key == 1:
@@ -338,96 +347,76 @@ if __name__ == '__main__':
             else:
                 x = 'the default case' + x[:10]
 
+    def test_tour(test_seq, msg, case_keys_choice, case_keys_length=1000000):
+        global case_keys
+        case_keys_choice = sorted(case_keys_choice)
+        print(
+            '\ngenerating random-ordered, %d-item-long, '
+            'sequence of keys from the set: {%s}...' %
+            (case_keys_length, ', '.join(map(repr, case_keys_choice))))
+        case_keys = [
+            random.choice(case_keys_choice) for i in xrange(case_keys_length)]
+        print('\n' + msg)
+        fastest_tests = []
+        for test in test_seq:
+            try:
+                results = timeit.Timer(
+                    'test()',
+                    'from __main__ import %s as test' % test.__name__,
+                ).repeat(number=1, repeat=3)
+            except Exception:
+                print('* %s: [could not be used]' % test.__doc__)
+            else:
+                fastest = min(results)
+                print('* %s: %s (fastest: %f)' % (
+                    test.__doc__,
+                    ', '.join('%f' % t for t in results),
+                    fastest))
+                fastest_tests.append((fastest, test.__doc__))
+        if fastest_tests:
+            print('\nthe winner is: %f/%s' % (min(fastest_tests)))
+
 
     print('%r simple performance tests' % sys.argv[0])
 
-    # tests *without* the default case
+    test_seq = (
+        test_if_elif,
+        test_standard,
+        test_standard2,
+        test_list_based_range_default,
+        test_list_based_with_try_except,
+        test_dict_based_no_default,
+        test_dict_based_with_get,
+        test_dict_based_with_try_except,
+    )
 
-    case_keys_length = 1000 * 1000
-    case_keys_choice = sorted(tuple(xrange(1, 20)) + (
-        71, 77, 18, 81, 88, 111, 118, 181, 188, 811, 818, 881, 888,
-        91, 99, 119, 191, 199, 911, 919, 991, 999,
-        1111, 1119, 1191, 1199, 1911, 1919, 1991, 1999,
-        9111, 9119, 9191, 9199, 9911, 9919, 9991, 9999))
-    print(
-        '\ngenerating random-ordered, %d-item-long, '
-        'sequence of keys from the set: {%s}...' %
-        (case_keys_length, ', '.join(map(repr, case_keys_choice))))
-    case_keys = [
-        random.choice(case_keys_choice) for i in xrange(case_keys_length)]
+    test_tour(
+        test_seq,
+        '1st test tour (default cases not used):',  # all keys have their cases
+        case_keys_choice = (tuple(xrange(1, 20)) + (
+            71, 77, 18, 81, 88, 111, 118, 181, 188, 811, 818, 881, 888,
+            91, 99, 119, 191, 199, 911, 919, 991, 999,
+            1111, 1119, 1191, 1199, 1911, 1919, 1991, 1999,
+            9111, 9119, 9191, 9199, 9911, 9919, 9991, 9999)))
 
-    for tour in ('1st', '2nd'):
-        print(
-            '\n%s test tour (no default cases):' %
-            tour)
-        for test in (
-              test_if_elif,
-              test_standard,
-              test_list_based_range_default, test_list_based_with_try_except,
-              test_dict_based_no_default, test_dict_based_with_get,
-              test_dict_based_with_try_except):
-            print('* %s: %s' % (
-                test.__doc__,
-                ', '.join('%f' % t for t in timeit.Timer(
-                        'test()',
-                        'from __main__ import %s as test' % test.__name__,
-                        ).repeat(number=1, repeat=3))))
+    test_tour(
+        test_seq,
+        'test tour #2 (using default cases, keys in list-based switch range):',
+        # about half of the keys do not have their cases (default case is used)
+        case_keys_choice = (tuple(xrange(1, 70)) + (
+            71, 77, 18, 81, 88, 111, 118, 181, 188, 811, 818, 881, 888,
+            91, 99, 119, 191, 199, 911, 919, 991, 999,
+            1111, 1119, 1191, 1199, 1911, 1919, 1991, 1999,
+            9111, 9119, 9191, 9199, 9911, 9919, 9991, 9999)))
 
-    # tests *with* the default case
-
-    case_keys_choice = sorted(tuple(xrange(1, 70)) + (
-        71, 77, 18, 81, 88, 111, 118, 181, 188, 811, 818, 881, 888,
-        91, 99, 119, 191, 199, 911, 919, 991, 999,
-        1111, 1119, 1191, 1199, 1911, 1919, 1991, 1999,
-        9111, 9119, 9191, 9199, 9911, 9919, 9991, 9999))
-    print(
-        '\ngenerating random-ordered, %d-item-long, '
-        'sequence of keys from the set: {%s}...' %
-        (case_keys_length, ', '.join(map(repr, case_keys_choice))))
-    case_keys = [
-        random.choice(case_keys_choice) for i in xrange(case_keys_length)]
-
-    for tour in ('3rd', '4th'):
-        print(
-            '\n%s test tour (with default cases):' %
-            tour)
-        for test in (
-              test_if_elif,
-              test_standard,
-              test_list_based_range_default, test_list_based_with_try_except,
-              test_dict_based_with_get, test_dict_based_with_try_except):
-            print('* %s: %s' % (
-                test.__doc__,
-                ', '.join('%f' % t for t in timeit.Timer(
-                        'test()',
-                        'from __main__ import %s as test' % test.__name__,
-                        ).repeat(number=1, repeat=3))))
-
-    case_keys_choice = sorted(tuple(xrange(1, 20)) + (
-        71, 77, 18, 81, 88, 111, 118, 181, 188, 811, 818, 881, 888,
-        91, 99, 119, 191, 199, 911, 919, 991, 999,
-        1111, 1119, 1191, 1199, 1911, 1919, 1991, 1999,
-        9111, 9119, 9191, 9199, 9911, 9919, 9991, 9999) +
-        tuple(xrange(10000, 10050)))
-    print(
-        '\ngenerating random-ordered, %d-item-long, '
-        'sequence of keys from the set: {%s}...' %
-        (case_keys_length, ', '.join(map(repr, case_keys_choice))))
-    case_keys = [
-        random.choice(case_keys_choice) for i in xrange(case_keys_length)]
-
-    for tour in ('5th', '6th'):
-        print(
-            '\n%s test tour (with default cases):' %
-            tour)
-        for test in (
-              test_if_elif,
-              test_standard,
-              test_list_based_with_try_except,
-              test_dict_based_with_get, test_dict_based_with_try_except):
-            print('* %s: %s' % (
-                test.__doc__,
-                ', '.join('%f' % t for t in timeit.Timer(
-                        'test()',
-                        'from __main__ import %s as test' % test.__name__,
-                        ).repeat(number=1, repeat=3))))
+    test_tour(
+        test_seq,
+        'test tour #3 (using default cases, their keys not in that range):',
+        # about half of the keys do not have their cases (default case is used)
+        # + that keys are not in the list-based switch key range
+        case_keys_choice=(tuple(xrange(1, 20)) + (
+            71, 77, 18, 81, 88, 111, 118, 181, 188, 811, 818, 881, 888,
+            91, 99, 119, 191, 199, 911, 919, 991, 999,
+            1111, 1119, 1191, 1199, 1911, 1919, 1991, 1999,
+            9111, 9119, 9191, 9199, 9911, 9919, 9991, 9999) +
+            tuple(xrange(10000, 10050))))
