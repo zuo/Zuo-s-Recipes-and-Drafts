@@ -17,6 +17,11 @@ Repo content:
      native Python features: decorators, class inheritance plus super(),
      private name mangling).
 
+* caseswitch.py
+  -- very fast switch/case-like dispatch (dict-or-list-based); define
+     it in an elegant, declarative way in a class (and possibly in its
+     subclasses...) with easy-to-use decorators.
+
 * clonetools/*
   -- tools for cloning classes and functions, useful when you need to
      "copy" a class or a function to adjust it (e.g. adding __slots__
