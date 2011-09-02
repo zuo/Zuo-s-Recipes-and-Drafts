@@ -124,9 +124,9 @@ if __name__ == '__main__':
     import timeit
 
 
-    # universal approach -- useful in most situations when the number of cases
-    # is not very small (for a-few-cases situations the traditional if/elif...
-    # approach seems to be most efficient)
+    # useful in most situations when the number of cases is not-so-small
+    # (for small numbers the traditional if/elif/else approach seems to be
+    # most efficient)
     class DefaultDictSwitch(Switch):
 
         @case(1)
@@ -397,7 +397,12 @@ if __name__ == '__main__':
 
     test_tour(
         test_seq,
-        '1st test tour (default cases not used):',  # all keys have their cases
+        'test tour #1 (default cases not used; small number of keys):',
+        case_keys_choice = tuple(xrange(1, 10)))
+
+    test_tour(
+        test_seq,
+        'test tour #2 (default cases not used; not-so-small number of keys):',
         case_keys_choice = (tuple(xrange(1, 20)) + (
             71, 77, 18, 81, 88, 111, 118, 181, 188, 811, 818, 881, 888,
             91, 99, 119, 191, 199, 911, 919, 991, 999,
@@ -406,7 +411,7 @@ if __name__ == '__main__':
 
     test_tour(
         test_seq,
-        'test tour #2 (using default cases, keys in list-based switch range):',
+        'test tour #3 (using default cases, keys in list-based switch range):',
         # about half of the keys do not have their cases (default case is used)
         case_keys_choice = (tuple(xrange(1, 70)) + (
             71, 77, 18, 81, 88, 111, 118, 181, 188, 811, 818, 881, 888,
@@ -416,7 +421,7 @@ if __name__ == '__main__':
 
     test_tour(
         test_seq,
-        'test tour #3 (using default cases, their keys not in that range):',
+        'test tour #4 (using default cases, their keys not in that range):',
         # about half of the keys do not have their cases (default case is used)
         # + that keys are not in the list-based switch key range
         case_keys_choice=(tuple(xrange(1, 20)) + (
