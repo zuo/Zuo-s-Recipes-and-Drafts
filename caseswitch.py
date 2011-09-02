@@ -15,7 +15,7 @@ try: xrange
 except NameError:
     xrange = range  # Py3.x
 
-__all__ = 'Switch', 'case'
+__all__ = 'with_switch', 'case', 'list_switch_factory', 'SwitchMeta', 'Switch'
 
 
 #
