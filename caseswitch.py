@@ -1,9 +1,15 @@
 #!/usr/bin/env python
+#
+# Copyright (c) 2011 Jan Kaliszewski (zuo). All rights reserved.
+# Licensed under the MIT License.
+#
+# Python 2.5+/3.x-compatibile.
+#
+# The newest version of this module should be downloadable from:
+# https://github.com/zuo/Zuo-s-Recipes-and-Drafts/blob/master/caseswitch.py
 
 from collections import defaultdict
 import inspect
-from weakref import WeakValueDictionary
-
 
 try: xrange
 except NameError:
@@ -53,7 +59,7 @@ def with_switch(cls):
     return cls
 
 def case(*keys, **kwargs):
-    """Tags a given object (probably a callable method) as a case object."""
+    """Decorator: tags an attribute (probably a method) as a case object."""
     keys = list(keys)
     _default = kwargs.pop('default', False)
     _itsname = kwargs.pop('itsname', False)
@@ -82,7 +88,7 @@ def list_switch_factory(get_default_case, keys_to_cases, length=1000):
     """
     Factory to create fast integer-only-based switches (using list-indexing).
 
-    A usefule example of 'custom_switch_factory' attribute value.
+    A usefule example of the optional 'custom_switch_factory' attribute value.
     """
     default_case = get_default_case()
     switch = [keys_to_cases.pop(key, default_case) for key in xrange(length)]
@@ -109,7 +115,7 @@ Switch = SwitchMeta(
 
 
 #
-# some performance tests...
+# some performance tests (with example switch declarations)...
 
 if __name__ == '__main__':
 
@@ -118,9 +124,9 @@ if __name__ == '__main__':
     import timeit
 
 
-    # universal approach -- useful in most situations when case number is
-    # not very small (for a few cases the traditional if...elif... approach
-    # seems to be most efficient)
+    # universal approach -- useful in most situations when the number of cases
+    # is not very small (for a-few-cases situations the traditional if/elif...
+    # approach seems to be most efficient)
     class DefaultDictSwitch(Switch):
 
         @case(1)
@@ -207,7 +213,7 @@ if __name__ == '__main__':
             return 'the default case' + arg
 
 
-    # example of adding some cases, basing on already defined switch class
+    # we add some cases, basing on an already defined switch class
     # (note that subclassing does not slow down the switch at all!)
     class AdminCommandSwitch(DefaultDictSwitch):
 
@@ -224,7 +230,7 @@ if __name__ == '__main__':
             return 'many_keys'
 
 
-    # special-case optimization (for integer-only keys from limited range)
+    # special-case optimization (for integer-only keys from a limited range)
     class ListBasedSwitch(DefaultDictSwitch):
         custom_switch_factory = list_switch_factory
         custom_switch_factory_kwargs = {'length': 10000}
@@ -253,7 +259,6 @@ if __name__ == '__main__':
         assert switch['get-class']() is AdminCommandSwitch
         assert switch[34567]() == 'many_keys'
 
-    # faster than the standard one in some special cases (int-only keys)
     def test_list_based_range_default():
         "list-based switch (default case support for keys from the range)"
         switch = ListBasedSwitch.switch
