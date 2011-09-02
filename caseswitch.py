@@ -86,9 +86,9 @@ def case(*keys, **kwargs):
 @staticmethod
 def list_switch_factory(get_default_case, keys_to_cases, length=1000):
     """
-    Factory to create fast integer-only-based switches (using list-indexing).
+    A factory to create fast integer-only-key switches that use list-lookup.
 
-    A usefule example of the optional 'custom_switch_factory' attribute value.
+    (A useful example of the optional `custom_switch_factory` attribute value).
     """
     default_case = get_default_case()
     switch = [keys_to_cases.pop(key, default_case) for key in xrange(length)]
