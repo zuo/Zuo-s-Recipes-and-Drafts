@@ -208,7 +208,7 @@ if __name__ == '__main__':
         def nineteen_plus(arg):
             return 'nineteen_plus' + arg
 
-        @case(333, default=True)
+        @case(33, 333, 3333, default=True)
         def something_else(arg):
             return 'the default case' + arg
 
