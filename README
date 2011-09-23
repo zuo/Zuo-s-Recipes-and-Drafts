@@ -5,7 +5,9 @@
 [code in Python, unless explicitly marked differently]
 
 Copyright (c) 2010, 2011 Jan Kaliszewski (zuo). All rights reserved.
-Licensed under the MIT License (see: LICENSE).
+
+All content is licensed under the MIT License (see: MIT_LICENSE),
+unless explicitly marked differently.
 
 ----------------------------------------------------------------------
 
@@ -49,6 +51,12 @@ Repo content:
      tests; or simply would like to define your named tuple classes in
      a class-syntax-based and DRY way (without repeating type names...)
      -- this recipe is for you.
+
+* smoothloop.py
+  -- use this script to automagically loop your .WAV instrument samples
+     (to use them e.g. with a music tracker, like MilkyTracker...);
+  -- requires numpy;
+  -- licenced under the GPL (ver. 2 or newer).
 
 * trace_logging.py
   -- just import, call and log your selected call/return/exception/etc.
