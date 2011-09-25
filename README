@@ -20,9 +20,10 @@ Repo content:
      private name mangling).
 
 * caseswitch.py
-  -- very fast switch/case-like dispatch (dict-or-list-based); define
-     it in an elegant, declarative way in a class (and possibly in its
-     subclasses...) with easy-to-use decorators.
+  -- a very fast switch/case-like dispatch tool (dict-or-list-based);
+  -- you can define your dispatcher in an elegant, declarative way, as
+     a class (possibly subclassing it...) with easy-to-use decorators;
+  -- subclassing does not affect efficiency.
 
 * clonetools/*
   -- tools for cloning classes and functions, useful when you need to
@@ -38,7 +39,7 @@ Repo content:
 
 * flocktests.py
   -- tiny fcntl.flock() (Unix file lock) behaviour sampling script;
-  -- an exemplary/educational piece of code rather than a utility script.
+  -- an exemplary/educational piece of code (not a utility script).
 
 * mplogfilehandler.py [plus mplogfilehandler_quicktest.py]
   -- simple multiprocess-safe logging and interprocess locking classes;
@@ -54,9 +55,9 @@ Repo content:
 
 * smoothloop.py
   -- use this script to automagically loop your .WAV instrument samples
-     (to use them e.g. with a music tracker, like MilkyTracker...);
+     (to use them in any music sequencer/tracker, e.g. MilkyTracker...);
   -- requires numpy;
-  -- licenced under the GPL (ver. 2 or newer).
+  -- licenced under GPL 2+ (see: LICENSE_GPL2 and LICENSE_GPL3).
 
 * trace_logging.py
   -- just import, call and log your selected call/return/exception/etc.
