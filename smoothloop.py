@@ -2,7 +2,7 @@
 # [Python 2.6 compatibile]
 
 """
-smooth_loop.py -- ver. 0.1.1
+smooth_loop.py 0.1.2
 
 Copyright (c) 2010-2011 Jan Kaliszewski (zuo). All rights reserved.
 
@@ -47,13 +47,15 @@ class Opt(object):
         self.kwargs = kwargs
 
 USAGE_MSG = 'Usage: %prog [options] WAVEFILE(s)\n   or  %prog --help'
+VERSION_MSG = __doc__.lstrip().split('\n')[0]
+COPYRIGHT_MSG = __doc__.strip()
 NO_FILE_MSG = 'no WAVEFILE(s) given'
 CANNOT_OVERWRITE_MSG = ('the --filename-suffix SUFFIX value cannot be empty '
                         '(use the --overwrite option instead)')
 ARGV_OPT_DEFINITIONS = (
     Opt('--copyright',
         action='store_true',
-        help='show the copyright information and exit',
+        help='show copyright information and exit',
     ),
     Opt('-s', '--cf-source',
         default=1.0,
@@ -70,14 +72,15 @@ ARGV_OPT_DEFINITIONS = (
     Opt('-c', '--cf-cut',
         type='float',
         default=0.1,
-        help='interval between the end of loop '
-             'and the end of wave, in SECONDS',
+        help='length of after-loop area '
+             'that will be cut off, in SECONDS',
         metavar='SECONDS',
     ),
     Opt('-e', '--cf-extra',
         type='float',
         default=0.1,
-        help='length of added after-loop area, in SECONDS',
+        help='length of extra after-loop area (copied from what is '
+             'after crossfade-loop mix source-area), in SECONDS',
         metavar='SECONDS',
     ),
     Opt('-i', '--wave-fade-in',
@@ -89,12 +92,12 @@ ARGV_OPT_DEFINITIONS = (
     Opt('-f', '--filename-suffix',
         type='string',
         default='.L',
-        help='output filename SUFFIX added before the .wav extension',
+        help='output filename SUFFIX added before .wav extension',
         metavar='SUFFIX',
     ),
     Opt('-o', '--overwrite',
         action='store_true',
-        help='overwrite source file(s) (do not add any filename suffix)',
+        help='overwrite source file(s) (not adding filename suffix)',
     ),
     Opt('-v', '--verbosity',
         type='choice',
@@ -209,7 +212,7 @@ def do_crossfade_loop_mix(main_wave, side_results, wave_params,
 
 
 def do_wave_fade_in(main_wave, side_results, wave_params,
-                         opts, log=logging.getLogger()):
+                    opts, log=logging.getLogger()):
 
     fade_in_len = int(opts.wave_fade_in * wave_params.framerate)
     fade_in_place = main_wave.array[0:fade_in_len]
@@ -252,30 +255,27 @@ def process(src_frames_str, wave_params, opts, log=logging.getLogger()):
     return result_frames, to_append_str, wave_params
 
 
-def parse_cmdline(usage_msg=USAGE_MSG, no_file_msg=NO_FILE_MSG,
-                  cannot_overwrite_msg=CANNOT_OVERWRITE_MSG,
-                  opt_defs=ARGV_OPT_DEFINITIONS):
+def parse_cmdline():
 
-    opt_parser = optparse.OptionParser(usage=usage_msg)
-    for option in opt_defs:
+    opt_parser = optparse.OptionParser(usage=USAGE_MSG, version=VERSION_MSG)
+    for option in ARGV_OPT_DEFINITIONS:
         default = option.kwargs.get('default')
         if option.kwargs.get('type') == 'choice':
             (option.kwargs['help']
-            ) += (' ({0} is one of: {1}{2})'
-                  .format(option.kwargs['metavar'],
-                          ', '.join(option.kwargs['choices']),
+            ) += (' (one of: {0}{1})'
+                  .format(', '.join(option.kwargs['choices']),
                           '; default: {0}'.format(default) if default else ''))
         elif default:
             option.kwargs['help'] += ' (default: {0})'.format(default)
         opt_parser.add_option(*option.args, **option.kwargs)
     opts, file_names = opt_parser.parse_args()
     if opts.copyright:
-        print(__doc__)
+        print(COPYRIGHT_MSG)
         sys.exit(0)
     if not file_names:
-        opt_parser.error(no_file_msg)
+        opt_parser.error(NO_FILE_MSG)
     if not opts.filename_suffix:
-        opt_parser.error(cannot_overwrite_msg)
+        opt_parser.error(CANNOT_OVERWRITE_MSG)
     return opts, file_names
 
 
@@ -301,8 +301,7 @@ def main():
     opts, file_names = parse_cmdline()
     log = configure_logging(opts)
     try:
-        assert file_names, 'There should be at least one file name'
-
+        assert file_names
         for i, name in enumerate(file_names):
             log.info('Processing {0}...'.format(name))
             with contextlib.closing(wave.open(name, 'rb')) as wave_read:
@@ -312,10 +311,8 @@ def main():
             (result_frames, to_append_str, wave_params
             ) = process(src_frames_str, wave_params, opts, log)
 
-            base, ext = osp.splitext(name)
-            if opts.overwrite:
-                name = ''.join((base, ext))
-            else:
+            if not opts.overwrite:
+                base, ext = osp.splitext(name)
                 name = ''.join((base, opts.filename_suffix, ext))
             log.debug('Processed. Writing {0}...'.format(name))
 
@@ -323,7 +320,7 @@ def main():
                 wave_write.setparams(wave_params)
                 wave_write.writeframes(result_frames)
 
-            log.debug('Appending a chunk with loop-information...')
+            log.debug('Appending loop-information chunk...')
 
             with open(name, 'ab') as wave_file:
                 wave_file.write(to_append_str)
