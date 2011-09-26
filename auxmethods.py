@@ -124,17 +124,17 @@ A few remarks
 * `aux()` decorator adds some additional methods to the class. If the primary
   method name is `spam`, their names will be:
 
-  * `spam_primary` -- the method you defined as spam (now `spam()` is
-    a wrapper responsible for all that `around`/`before`/`primary`/`after`
-    calls...),
-  * `__spam`, `__spam_around`, `__spam_before`, `__spam_after` -- names of
+  * `spam_primary` -- refers to the method you defined as `spam()`
+    (now `spam()` is a wrapper responsible for all that `spam_around()`/
+    /`spam_before()`/`spam_primary()`/`spam_after()` calls...),
+  * `__spam`, `__spam_around`, `__spam_before`, `__spam_after` -- refer to
     special helper methods (see below).
 
   You should treat these names as reserved and should not set such class
-  /instance attributes in your whole class hierarchy (unless you really know
-  what you do...). Please note that such a method will not be added if its
-  name is already present in class __dict__ (that may lead to erroneous
-  behaviour unless you have placed there another method consciously...).
+  /instance attributes in your whole class hierarchy. Please note that such
+  a method will not be added if its name is already present in the class
+  __dict__ (what may lead to erroneous behaviour unless you have placed
+  there another method consciously, knowing what you do...).
 
   Also, please note that `spam_primary()` and `__spam()` will not be added if
   the class doesn't contain the `spam()` primary method; and `__spam_around()`
@@ -148,7 +148,7 @@ A few remarks
   * in around aux methods: `self.__<primary method name>_around(<arguments>)`
 
 * Unlike in CLOS, only the most specialized `before`/`after` aux methods are
-  called automatically -- it's your responsibility to call those in
+  called automatically -- it's your responsibility to call those defined in
   superclasses, in the following way:
 
   * in `before` aux methods: `self.__<primary method name>_before(<arguments>)`
@@ -165,12 +165,12 @@ A few remarks
   names with: '_' + the class name with any leading underscores stripped
   (see: http://docs.python.org/reference/expressions.html#atom-identifiers).
 
-* Because private name mangling is in use, aux() decorator will raise
-  ClassNameConflictError if it find that the name of the decorated class and
+* Because private name mangling is in use, the aux() decorator will raise
+  ClassNameConflictError if it finds that the name of the decorated class and
   any superclass name are -- after stripping leading underscores -- identical.
 
-* All that `__*` methods make use of the standard `super()` function but they
-  are a bit smarter: you can safely call them without concern whether
+* All that `__*` methods make use of the standard `super()` function but
+  they are a bit smarter: you can safely call them without concern whether
   appropriate methods exist in superclasses.
 
 * `self.__<primary method name>_around(<arguments>)` works similarly to
@@ -195,7 +195,8 @@ A few remarks
 For information about CLOS auxiliary methods -- see:
 http://www.aiai.ed.ac.uk/~jeff/clos-guide.html#meth-comb
 
-For more information about this module -- read its source code.
+For more information about this module -- read its source code and/or analyze
+the examples.
 """
 
 from __future__ import with_statement  # (Py2.5 needs this)
@@ -217,7 +218,6 @@ class ClassNameConflictError(Exception):
     """
     Conflict: class names are identical after stripping leading underscores.
     """
-
     def __str__(self):
         cls1, cls2 = self.args
         return (
