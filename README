@@ -60,11 +60,12 @@ Repo content:
   -- licenced under GPL 2+ (see: LICENSE_GPL2 and LICENSE_GPL3).
 
 * trace_logging.py
-  -- just import, call and log your selected call/return/exception/etc.
-     events (you can use the standard Python logging framework);
+  -- just import + call -- and you can filter and log your call/return/
+     exception/etc. events (you can use the standard Python logging
+     framework or pass your custom logging-or-doing-anything object);
   -- quite a flexible tool and about 50 effective SLOC only (excluding
      the example script);
-  -- rather for debugging than for production environments (programs
-     noticeably slow down).
+  -- for debugging rather than for production (programs noticeably slow
+     down).
 
 * ...to be continued :)
