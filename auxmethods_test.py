@@ -12,7 +12,7 @@ from auxmethods import *
 
 
 #
-# helper class and its instance
+# helper class and object
 
 class _OutputForTests(list):
 
@@ -25,7 +25,7 @@ class _OutputForTests(list):
         test_case.assertEqual(self, list(expected_tbuf_content))
         del self[:]
 
-ot = _OutputForTests()
+out = _OutputForTests()
 
 
 #
@@ -41,57 +41,57 @@ WithNoAuxMethods = aux(WithNoAuxMethods)
 class A(object):
     @primary
     def foo(self, arg):
-        return ot('A.foo', arg, self.__foo(arg))
+        return out('A.foo', arg, self.__foo(arg))
     def foo_before(self, arg):
-        return ot('A.foo_before', arg, self.__foo_before(arg))
+        return out('A.foo_before', arg, self.__foo_before(arg))
     def foo_after(self, arg):
-        return ot('A.foo_after', arg, self.__foo_after(arg))
+        return out('A.foo_after', arg, self.__foo_after(arg))
     def foo_around(self, arg):
-        return ot('A.foo_around (begin)', arg) and ot(
+        return out('A.foo_around (begin)', arg) and out(
             'A.foo_around (end)', arg, self.__foo_around(arg))
     @primary
     def _bar(self, arg):
-        return ot('A._bar', arg, self.___bar(arg))
+        return out('A._bar', arg, self.___bar(arg))
     def _bar_before(self, arg):
-        return ot('A._bar_before', arg, self.___bar_before(arg))
+        return out('A._bar_before', arg, self.___bar_before(arg))
     def _bar_after(self, arg):
-        return ot('A._bar_after', arg, self.___bar_after(arg))
+        return out('A._bar_after', arg, self.___bar_after(arg))
     def _bar_around(self, arg):
-        return ot('A._bar_around (begin)', arg) and ot(
+        return out('A._bar_around (begin)', arg) and out(
             'A._bar_around (end)', arg, self.___bar_around(arg))
 A = aux(A)
 
 class _A_(A):
     @primary
     def foo(self, arg):
-        return ot('_A_.foo', arg, self.__foo(arg))
+        return out('_A_.foo', arg, self.__foo(arg))
     def foo_before(self, arg):
-        return ot('_A_.foo_before', arg, self.__foo_before(arg))
+        return out('_A_.foo_before', arg, self.__foo_before(arg))
     def foo_after(self, arg):
-        return ot('_A_.foo_after', arg, self.__foo_after(arg))
+        return out('_A_.foo_after', arg, self.__foo_after(arg))
     def foo_around(self, arg):
-        return ot('_A_.foo_around (begin)', arg) and ot(
+        return out('_A_.foo_around (begin)', arg) and out(
             '_A_.foo_around (end)', arg, self.__foo_around(arg))
     @primary
     def _bar(self, arg):
-        return ot('_A_._bar', arg, self.___bar(arg))
+        return out('_A_._bar', arg, self.___bar(arg))
     def _bar_before(self, arg):
-        return ot('_A_._bar_before', arg, self.___bar_before(arg))
+        return out('_A_._bar_before', arg, self.___bar_before(arg))
     def _bar_after(self, arg):
-        return ot('_A_._bar_after', arg, self.___bar_after(arg))
+        return out('_A_._bar_after', arg, self.___bar_after(arg))
     def _bar_around(self, arg):
-        return ot('_A_._bar_around (begin)', arg) and ot(
+        return out('_A_._bar_around (begin)', arg) and out(
             '_A_._bar_around (end)', arg, self.___bar_around(arg))
 _A_ = aux(_A_)
 
-AB_TEST_PATTERN = """
-a.%(basename)s_primary('%(arg)s'); ot.check(self,
+A_AND_A_TEST_PATTERN = """
+a.%(basename)s_primary('%(arg)s'); out.check(self,
     ['A.%(basename)s', '%(arg)s', None])
-a.%(basename)s_before('%(arg)s'); ot.check(self,
+a.%(basename)s_before('%(arg)s'); out.check(self,
     ['A.%(basename)s_before', '%(arg)s', None])
-a.%(basename)s_after('%(arg)s'); ot.check(self,
+a.%(basename)s_after('%(arg)s'); out.check(self,
     ['A.%(basename)s_after', '%(arg)s', None])
-a.%(basename)s_around('%(arg)s'); ot.check(self,
+a.%(basename)s_around('%(arg)s'); out.check(self,
     ['A.%(basename)s_around (begin)', '%(arg)s'],
     ['A.%(basename)s_before', '%(arg)s', None],
     ['A.%(basename)s', '%(arg)s', None],
@@ -99,7 +99,7 @@ a.%(basename)s_around('%(arg)s'); ot.check(self,
     ['A.%(basename)s_around (end)', '%(arg)s',
         ['A.%(basename)s', '%(arg)s', None]])
 
-a.%(basename)s('%(arg)s'); ot.check(self,
+a.%(basename)s('%(arg)s'); out.check(self,
     ['A.%(basename)s_around (begin)', '%(arg)s'],
     ['A.%(basename)s_before', '%(arg)s', None],
     ['A.%(basename)s', '%(arg)s', None],
@@ -107,7 +107,7 @@ a.%(basename)s('%(arg)s'); ot.check(self,
     ['A.%(basename)s_around (end)', '%(arg)s',
         ['A.%(basename)s', '%(arg)s', None]])
 
-_a_.%(basename)s('%(arg)s'); ot.check(self,
+_a_.%(basename)s('%(arg)s'); out.check(self,
     ['_A_.%(basename)s_around (begin)', '%(arg)s'],
     ['A.%(basename)s_around (begin)', '%(arg)s'],
     ['A.%(basename)s_before', '%(arg)s', None],
@@ -133,14 +133,14 @@ class TimedAction(AutoAuxBase):
 
     def action_before(self, *args, **kwargs):
         """Start action timer."""
-        ot('TimedAction.action_before', args, kwargs,
+        out('TimedAction.action_before', args, kwargs,
            self.__action_before(*args, **kwargs))
         self.start_time = time.time()
 
     def action_after(self, *args, **kwargs):
         """Stop action timer and report measured duration."""
         self.action_duration = time.time() - self.start_time
-        ot('TimedAction.action_after', args, kwargs,
+        out('TimedAction.action_after', args, kwargs,
            self.__action_after(*args, **kwargs))
 
 
@@ -148,7 +148,7 @@ class FileContentAction(AutoAuxBase):
 
     def action_around(self, path):
         """Read file and pass its content on; report success or error."""
-        ot('FileContentAction.action_around (begin)', path)
+        out('FileContentAction.action_around (begin)', path)
         try:
             with open(path) as f:
                 content = f.read()
@@ -156,7 +156,7 @@ class FileContentAction(AutoAuxBase):
             result = content = None
         else:
             result = self.__action_around(path, content)
-        ot('FileContentAction.action_around (end)', content, result)
+        out('FileContentAction.action_around (end)', content, result)
         return result
 
 
@@ -168,19 +168,19 @@ class NewlinesCounter(FileContentAction, TimedAction):
     def action(self, path, content):
         """Get number of newlines in a given string."""
         result = content.count('\n')
-        ot('NewlinesCounter.action', path, content, result,
+        out('NewlinesCounter.action', path, content, result,
            self.__action(path, content))
         return result
 
     def action_before(self, path, *args):
-        ot('NewlinesCounter.action_before', path, args)
+        out('NewlinesCounter.action_before', path, args)
         self.__action_before(path, *args)
 
     def action_around(self, path):
         """Start operation with given file path. Finally, show summary."""
-        ot('NewlinesCounter.action_around (begin)', path)
+        out('NewlinesCounter.action_around (begin)', path)
         result = self.__action_around(path)
-        ot('NewlinesCounter.action_around (end)', result)
+        out('NewlinesCounter.action_around (end)', result)
         if result is not None:
             return '%s in file %r: %s (counted in %fs)\n' % (
                 self.item_descr, path, result, self.action_duration)
@@ -195,16 +195,16 @@ class SpacesAndNewlinesCounter(NewlinesCounter):
     @primary
     def action(self, path, content):
         """Get number of spaces and newlines in a given string."""
-        ot('SpacesAndNewlinesCounter.action (begin)', path, content)
+        out('SpacesAndNewlinesCounter.action (begin)', path, content)
         spaces = content.count(' ')
         newlines = self.__action(path, content)
         result = spaces + newlines
-        ot('SpacesAndNewlinesCounter.action (end)', newlines, result)
+        out('SpacesAndNewlinesCounter.action (end)', newlines, result)
         return result
 
     def action_after(self, path, *args):
         self.__action_after(path, *args)
-        ot('SpacesAndNewlinesCounter.action_after', path, args)
+        out('SpacesAndNewlinesCounter.action_after', path, args)
 
 
 #
@@ -213,7 +213,7 @@ class SpacesAndNewlinesCounter(NewlinesCounter):
 class TestSimple(unittest.TestCase):
 
     def setUp(self):
-        del ot[:]
+        del out[:]
 
     def test_with_no_aux_methods(self):
         self.assertTrue(hasattr(WithNoAuxMethods, '_WithNoAuxMethods__spam'))
@@ -230,14 +230,14 @@ class TestSimple(unittest.TestCase):
         self.assertTrue(hasattr(_A_, '_bar_primary'))
         a = A()
         _a_ = _A_()
-        exec(AB_TEST_PATTERN % dict(basename='foo', arg='spam'))
-        exec(AB_TEST_PATTERN % dict(basename='_bar', arg='nee'))
+        exec(A_AND_A_TEST_PATTERN % dict(basename='foo', arg='spam'))
+        exec(A_AND_A_TEST_PATTERN % dict(basename='_bar', arg='nee'))
 
 
 class TestMoreRealistic(unittest.TestCase):
 
     def setUp(self):
-        del ot[:]
+        del out[:]
         with open(__file__) as f:
             self.content = f.read()
         self.nl_num = self.content.count('\n')
@@ -253,7 +253,7 @@ class TestMoreRealistic(unittest.TestCase):
             'could not count newlines in file %r\n' % self.non_existent)
         self.assertFalse(hasattr(nl_counter, 'start_time'))
         self.assertFalse(hasattr(nl_counter, 'action_duration'))
-        ot.check(self,
+        out.check(self,
             ['NewlinesCounter.action_around (begin)', self.non_existent],
             ['FileContentAction.action_around (begin)', self.non_existent],
             ['FileContentAction.action_around (end)', None, None],
@@ -265,7 +265,7 @@ class TestMoreRealistic(unittest.TestCase):
                 __file__, self.nl_num, nl_counter.action_duration))
         self.assertTrue(hasattr(nl_counter, 'start_time'))
         self.assertTrue(hasattr(nl_counter, 'action_duration'))
-        ot.check(self,
+        out.check(self,
             ['NewlinesCounter.action_around (begin)',
              __file__],
             ['FileContentAction.action_around (begin)',
@@ -283,7 +283,7 @@ class TestMoreRealistic(unittest.TestCase):
             ['NewlinesCounter.action_around (end)',
              self.nl_num])
 
-    def test_scp_nl_counter(self):
+    def test_spc_nl_counter(self):
         self.assertTrue(hasattr(SpacesAndNewlinesCounter, 'action_primary'))
         spc_nl_counter = SpacesAndNewlinesCounter()
 
@@ -293,7 +293,7 @@ class TestMoreRealistic(unittest.TestCase):
                 self.non_existent)
         self.assertFalse(hasattr(spc_nl_counter, 'start_time'))
         self.assertFalse(hasattr(spc_nl_counter, 'action_duration'))
-        ot.check(self,
+        out.check(self,
             ['NewlinesCounter.action_around (begin)', self.non_existent],
             ['FileContentAction.action_around (begin)', self.non_existent],
             ['FileContentAction.action_around (end)', None, None],
@@ -303,7 +303,7 @@ class TestMoreRealistic(unittest.TestCase):
             spc_nl_counter.action(__file__),
             'spaces and newlines in file %r: %s (counted in %fs)\n' % (
                 __file__, self.spc_nl_num, spc_nl_counter.action_duration))
-        ot.check(self,
+        out.check(self,
             ['NewlinesCounter.action_around (begin)',
              __file__],
             ['FileContentAction.action_around (begin)',
