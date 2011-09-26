@@ -125,7 +125,7 @@ A few remarks
   method name is `spam`, their names will be:
 
   * `spam_primary` -- refers to the method you defined as `spam()`
-    (now `spam()` is a wrapper responsible for all that `spam_around()`/
+    (now `spam()` is a wrapper responsible for all that `spam_around()`
     /`spam_before()`/`spam_primary()`/`spam_after()` calls...),
   * `__spam`, `__spam_around`, `__spam_before`, `__spam_after` -- refer to
     special helper methods (see below).
