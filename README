@@ -23,7 +23,7 @@ Repo content:
   -- a very fast switch/case-like dispatch tool (dict-or-list-based);
   -- you can define your dispatcher in an elegant, declarative way, as
      a class (possibly subclassing it...) with easy-to-use decorators;
-  -- subclassing does not affect efficiency.
+  -- using subclasses does not affect efficiency.
 
 * clonetools/*
   -- tools for cloning classes and functions, useful when you need to
